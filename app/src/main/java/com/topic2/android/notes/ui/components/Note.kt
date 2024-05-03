@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.topic2.android.notes.domain.model.NoteModel
-import com.topic2.android.notes.theme.rwGreen
 import com.topic2.android.notes.util.fromHex
 
 @Composable
@@ -32,7 +31,7 @@ fun Note(
     onNoteCheckedChange: (NoteModel) -> Unit = {}
 ) {
     val backgroundShape: Shape = RoundedCornerShape(4.dp)
-    Row (
+    Row(
         modifier = Modifier
             .padding(8.dp)
             .shadow(1.dp, backgroundShape)
@@ -49,9 +48,10 @@ fun Note(
             size = 40.dp,
             border = 1.dp
         )
-        Column(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
 
         ) {
             Text(
@@ -93,6 +93,7 @@ fun Note(
 @Preview
 @Composable
 private fun NotePreview() {
+
     Note(
         note = NoteModel(
             1,
