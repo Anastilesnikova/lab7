@@ -1,5 +1,6 @@
 package com.topic2.android.notes.ui.components.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.BottomDrawerState
+import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -22,9 +25,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,10 +53,28 @@ import com.topic2.android.notes.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable
+@ExperimentalMaterialApi
 fun SaveNoteScreen(viewModel: MainViewModel) {
     val noteEntry: NoteModel by viewModel.noteEntry.observeAsState(NoteModel())
 
+    val colors: List<ColorModel> by viewModel.colors
+        .observeAsState(listOf())
 
+    val bottomDrawerState: BottomDrawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
+
+    val moveNoteToTrashDialogShownState: MutableState<Boolean> = rememberSaveable {
+        mutableStateOf(false)
+    }
+    BackHandler(
+        onBack = {
+            if (bottomDrawerState.isOpen) {
+                coroutineScope.launch { bottomDrawerState.close() }
+            } else {
+                NotesRouter.navigateTo(Screen.Notes)
+            }
+        }
+    )
     Scaffold(topBar = {
         val isEditingMode: Boolean = noteEntry.id != NEW_NOTE_ID
         SaveNoteTopAppBar(
@@ -59,17 +85,32 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
             onSaveNoteClick = {
                 viewModel.saveNote(noteEntry)
             },
-            onOpenColorPickerClick = { },
+            onOpenColorPickerClick = {
+                coroutineScope.launch { bottomDrawerState.open() }
+            },
             onDeleteNoteClick = {
-                viewModel.moveNoteToTrash(noteEntry)
+                moveNoteToTrashDialogShownState.value = true
             }
         )
     },
-        content = {
-            SaveNoteContent(
-                note = noteEntry,
-                onNoteChange = { updateNoteEntry ->
-                    viewModel.onNoteEntryChange(updateNoteEntry)
+        content = { it ->
+            BottomDrawer(
+                drawerState = bottomDrawerState,
+                drawerContent = {
+                    ColorPicker(colors = colors,
+                        onColorSelect = { color ->
+                            val newNoteEntry = noteEntry.copy(color = color)
+                            viewModel.onNoteEntryChange(newNoteEntry)
+                        }
+                    )
+                },
+                content = {
+                    SaveNoteContent(
+                        note = noteEntry,
+                        onNoteChange = { updateNoteEntry ->
+                            viewModel.onNoteEntryChange(updateNoteEntry)
+                        }
+                    )
                 }
             )
         }
