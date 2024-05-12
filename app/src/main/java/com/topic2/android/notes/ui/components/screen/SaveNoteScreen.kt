@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.BottomDrawer
 import androidx.compose.material.BottomDrawerState
 import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -115,6 +116,35 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
             )
         }
     )
+    if (moveNoteToTrashDialogShownState.value) {
+        AlertDialog(
+            onDismissRequest = {
+                moveNoteToTrashDialogShownState.value = false
+            },
+            title = {
+                Text("Move note to the trash?")
+            },
+            text = {
+                Text(
+                    "Are you sure you want to" + "move this note to the trash?"
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.moveNoteToTrash(noteEntry)
+                }) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    moveNoteToTrashDialogShownState.value = false
+                }) {
+                    Text("Dismiss")
+                }
+            }
+        )
+    }
 }
 
 
