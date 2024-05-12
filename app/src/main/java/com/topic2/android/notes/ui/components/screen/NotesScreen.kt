@@ -23,7 +23,7 @@ import com.topic2.android.notes.domain.model.NoteModel
 import com.topic2.android.notes.routing.Screen
 import com.topic2.android.notes.ui.components.AppDrawer
 import com.topic2.android.notes.ui.components.Note
-import com.topic2.android.notes.ui.components.TopAppBar
+import androidx.compose.material.TopAppBar
 import com.topic2.android.notes.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
