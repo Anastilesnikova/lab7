@@ -69,7 +69,7 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
     val moveNoteToTrashDialogShownState: MutableState<Boolean> = rememberSaveable {
         mutableStateOf(false)
     }
-    BackHandler(
+    BackHandler (
         onBack = {
             if (bottomDrawerState.isOpen) {
                 coroutineScope.launch { bottomDrawerState.close() }
@@ -150,8 +150,6 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
 }
 
 
-
-
 @Composable
 private fun SaveNoteTopAppBar(
     isEditingMode: Boolean,
@@ -194,22 +192,20 @@ private fun SaveNoteTopAppBar(
                 )
             }
             if (isEditingMode) {
-            IconButton(
-                onClick = onDeleteNoteClick
+                IconButton(
+                    onClick = onDeleteNoteClick
 
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Note Button",
-                    tint = MaterialTheme.colors.onPrimary
-                )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Note Button",
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                }
             }
-        }
         }
     )
 }
-
-
 @Composable
 private fun SaveNoteContent(
     note: NoteModel,
@@ -244,9 +240,8 @@ private fun SaveNoteContent(
         )
         PickedColor(color = note.color)
     }
-    }
 
-
+}
 @Composable
 private fun ContentTextField(
     modifier: Modifier = Modifier,
@@ -266,8 +261,6 @@ private fun ContentTextField(
         )
     )
 }
-
-
 @Composable
 private fun NoteCheckOption(
     isChecked: Boolean,
@@ -288,7 +281,6 @@ private fun NoteCheckOption(
     }
 }
 
-
 @Composable
 private fun PickedColor(color: ColorModel) {
     Row (
@@ -308,8 +300,6 @@ private fun PickedColor(color: ColorModel) {
         )
     }
 }
-
-
 
 @Composable
 private fun ColorPicker(
@@ -341,7 +331,6 @@ private fun ColorPicker(
         }
     }
 }
-
 @Composable
 fun ColorItem(
     color: ColorModel,
@@ -371,56 +360,6 @@ fun ColorItem(
     }
 }
 
-
-
-@Preview
-@Composable
-fun SaveNoteTopAppBarPreview() {
-    SaveNoteTopAppBar(
-        isEditingMode = true,
-        onBackClick = {},
-        onSaveNoteClick = {},
-        onOpenColorPickerClick = {},
-        onDeleteNoteClick = {}
-    )
-}
-
-
-@Preview
-@Composable
-fun SaveNoteContentPreview() {
-    SaveNoteContent(
-        note = NoteModel(title = "Title", content = "content"),
-        onNoteChange = {}
-    )
-}
-
-
-@Preview
-@Composable
-fun ContentTextFieldPreview() {
-    ContentTextField(
-        label = "Title",
-        text = "",
-        onTextChange = {}
-    )
-}
-
-
-@Preview
-@Composable
-fun NoteCheckOptionPreview() {
-    NoteCheckOption(false) {}
-}
-
-@Preview
-@Composable
-fun PickedColorPreview() {
-    PickedColor(ColorModel.DEFAULT)
-}
-
-
-
 @Preview
 @Composable
 fun ColorItemPreview() {
@@ -437,4 +376,43 @@ fun ColorPickerPreview() {
             ColorModel.DEFAULT
         )
     ) { }
+}
+
+@Preview
+@Composable
+fun SaveNoteTopAppBarPreview() {
+    SaveNoteTopAppBar(
+        isEditingMode = true,
+        onBackClick = {},
+        onSaveNoteClick = {},
+        onOpenColorPickerClick = {},
+        onDeleteNoteClick = {}
+    )
+}
+@Preview
+@Composable
+fun SaveNoteContentPreview() {
+    SaveNoteContent(
+        note = NoteModel(title = "Title", content = "content"),
+        onNoteChange = {}
+    )
+}
+@Preview
+@Composable
+fun ContentTextFieldPreview() {
+    ContentTextField(
+        label = "Title",
+        text = "",
+        onTextChange = {}
+    )
+}
+@Preview
+@Composable
+fun NoteCheckOptionPreview() {
+    NoteCheckOption(false) {}
+}
+@Preview
+@Composable
+fun PickedColorPreview() {
+    PickedColor(ColorModel.DEFAULT)
 }

@@ -1,6 +1,5 @@
 package com.topic2.android.notes.ui.components.screen
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
@@ -10,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
@@ -23,9 +23,9 @@ import com.topic2.android.notes.domain.model.NoteModel
 import com.topic2.android.notes.routing.Screen
 import com.topic2.android.notes.ui.components.AppDrawer
 import com.topic2.android.notes.ui.components.Note
-import androidx.compose.material.TopAppBar
 import com.topic2.android.notes.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,11 +35,9 @@ fun NotesScreen(viewModel: MainViewModel) {
         .notesNotInTrash
         .observeAsState(listOf())
 
-
     val scope: CoroutineScope = rememberCoroutineScope()
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState: ScaffoldState = rememberScaffoldState()
-
 
     Scaffold(
         topBar = {
@@ -66,6 +64,7 @@ fun NotesScreen(viewModel: MainViewModel) {
                 }
             )
         },
+
         scaffoldState = scaffoldState,
         drawerContent = {
             AppDrawer(
@@ -89,17 +88,19 @@ fun NotesScreen(viewModel: MainViewModel) {
                 }
             )
         },
-                    content = { it ->
-                if (notes.isNotEmpty()) {
-                    NotesList(
-                        notes = notes, onNoteCheckedChange = {
-                            viewModel.onNoteCheckedChange(it)
-                        },
-                        onNoteClick = { viewModel.onNoteClick(it) }
-                    )
-                }
+
+        content = { it ->
+            if (notes.isNotEmpty()) {
+                NotesList(
+                    notes = notes, onNoteCheckedChange = {
+                        viewModel.onNoteCheckedChange(it)
+                    },
+                    onNoteClick = { viewModel.onNoteClick(it) },
+                    isSelected = true
+                )
             }
-        )
+        }
+    )
 }
 
 
@@ -107,7 +108,8 @@ fun NotesScreen(viewModel: MainViewModel) {
 private fun NotesList(
     notes: List<NoteModel>,
     onNoteCheckedChange: (NoteModel) -> Unit,
-    onNoteClick: (NoteModel) -> Unit
+    onNoteClick: (NoteModel) -> Unit,
+    isSelected: Boolean
 ) {
     LazyColumn {
         items(count = notes.size) { noteIndex ->
@@ -115,12 +117,12 @@ private fun NotesList(
             Note(
                 note = note,
                 onNoteClick = onNoteClick,
-                onNoteCheckedChange = onNoteCheckedChange
+                onNoteCheckedChange = onNoteCheckedChange,
+                isSelected = false
             )
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -132,6 +134,7 @@ private fun NotesListPreview() {
             NoteModel(3, "Note 3", "Content 3", true)
         ),
         onNoteCheckedChange = {},
-        onNoteClick = {}
+        onNoteClick = {},
+        isSelected = true
     )
 }
